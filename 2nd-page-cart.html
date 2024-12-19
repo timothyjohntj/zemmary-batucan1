@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="CSS Logo.png">
+    <title>Cart</title>
+    <link rel="stylesheet" href="CSSHomepage.css">
+    <script src="cartScript.js" defer></script>
+</head>
+<body>
+    <script>
+        let cart = JSON.parse(localStorage.getItem('cart')) || [];
+
+        function updateCartDisplay() {
+            let cartItemsContainer = document.getElementById('cart-items');
+            cartItemsContainer.innerHTML = '';
+
+            let totalPrice = 0;
+            cart.forEach((product, index) => {
+                totalPrice += product.total;
+
+                let itemDiv = document.createElement('div');
+                itemDiv.innerHTML = `
+                    <img src="${product.image}" alt="${product.name}" width="100px">
+                    <h3>${product.name}</h3>
+                    <p>Price: $${product.price}</p>
+                    <label for="quantity-${index}">Quantity: </label>
+                    <input type="number" id="quantity-${index}" value="${product.quantity}" min="1" onchange="updateQuantity(${index})">
+                    <p>Total: $<span id="total-${index}">${product.total}</span></p>
+                `;
+                cartItemsContainer.appendChild(itemDiv);
+            });
+
+            // Update total price on the cart page
+            document.getElementById('total-price').innerText = totalPrice;
+        }
+
+        function updateQuantity(index) {
+            let quantityInput = document.getElementById(`quantity-${index}`);
+            cart[index].quantity = parseInt(quantityInput.value);
+            cart[index].total = cart[index].price * cart[index].quantity;
+            document.getElementById(`total-${index}`).innerText = cart[index].total;
+            updateLocalStorage();
+            updateCartDisplay();
+        }
+
+        function buyProducts() {
+            alert("Thank you for your purchase!");
+            localStorage.removeItem('cart'); // Clear the cart
+            window.location.href = "HTML.html"; // Redirect to the homepage
+        }
+
+        function addToCart(product) {
+            // Check if the product already exists in the cart
+            let existingProductIndex = cart.findIndex(item => item.id === product.id);
+
+            if (existingProductIndex !== -1) {
+                // Product exists, increase quantity
+                cart[existingProductIndex].quantity += product.quantity;
+                cart[existingProductIndex].total = cart[existingProductIndex].price * cart[existingProductIndex].quantity;
+            } else {
+                // Product does not exist, add new product to the cart
+                product.total = product.price * product.quantity;
+                cart.push(product);
+            }
+
+            updateLocalStorage();
+            updateCartDisplay();
+        }
+
+        function updateLocalStorage() {
+            // Update the localStorage with the latest cart
+            localStorage.setItem('cart', JSON.stringify(cart));
+        }
+
+        // Load cart and display it on page load
+        window.onload = updateCartDisplay;
+    </script>
+
+    <header>
+        <h1>Your Cart</h1>
+    </header>
+
+    <main>
+        <center>
+            <div id="cart-items"></div>
+            <h3>Total: $<span id="total-price">0</span></h3>
+            <button onclick="buyProducts()">Buy Product</button>
+        </center>
+    </main>
+</body>
+</html>

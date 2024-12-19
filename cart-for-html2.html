@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="CSS Logo.png">
+    <title>Your Cart</title>
+    <link rel="stylesheet" href="CSSHomepage.css">
+</head>
+<body>
+    <header>
+        <div class="cart">
+            <button onclick="location.href='HTML2JA'">Back to Products</button>
+        </div>
+    </header>
+
+    <header>
+        <h1>Your Cart</h1>
+    </header>
+
+    <main>
+        <div id="cart-items"></div>
+        <div id="total"></div>
+    </main>
+
+    <script>
+        // Cart functions
+        function updateCart() {
+            const cart = JSON.parse(localStorage.getItem('cart')) || [];
+            const cartItemsDiv = document.getElementById('cart-items');
+            const totalDiv = document.getElementById('total');
+
+            if (cart.length === 0) {
+                cartItemsDiv.innerHTML = '<p>Your cart is empty.</p>';
+                totalDiv.innerHTML = '';
+                return;
+            }
+
+            let totalPrice = 0;
+            cartItemsDiv.innerHTML = '';
+            cart.forEach(item => {
+                totalPrice += item.price * item.quantity;
+                cartItemsDiv.innerHTML += `
+                    <div class="cart-item">
+                        <img src="${item.image}" alt="${item.name}" width="100px" height="100px">
+                        <p>${item.name}</p>
+                        <p>Price: $${item.price}</p>
+                        <p>Quantity: ${item.quantity}</p>
+                    </div>
+                `;
+            });
+
+            totalDiv.innerHTML = `<h3>Total: $${totalPrice}</h3>`;
+        }
+
+        // Update cart on page load
+        window.onload = function() {
+            updateCart();
+        };
+    </script>
+</body>
+</html>

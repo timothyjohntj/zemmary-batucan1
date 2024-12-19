@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="CSS Logo.png">
+    <title>CSS</title>
+    <link rel="stylesheet" href="CSSHomepage.css">
+</head>
+<body>
+    <header>
+        <div class="cart">
+            <button onclick="location.href='cart-for-html2.html'">YOUR CART (<span id="cart-count">0</span>)</button>
+        </div>
+    </header>
+
+    <header>
+        <h1>Cebu South Shoes</h1>
+    </header>
+    <main>
+        <div class="product-container">
+            <div class="product">
+                <img src="Nike.png" alt="Product 1" width="190px" height="190px">
+                <h2>Nike Airforce 1</h2>
+                <p>Price: $120</p>
+                <label for="quantity1">Quantity: </label>
+                <input type="number" id="quantity1" name="quantity1" value="1" min="1" max="10">
+                <button onclick="addToCart('Nike Airforce 1', 120, 'Nike.png', document.getElementById('quantity1').value)">Add to Cart</button>
+            </div>
+
+            <div class="product">
+                <br>
+                <img src="Dunk.png" alt="Product 2" width="170px" height="170px">
+                <br>
+                <h2>Nike Dunk High Retro</h2>
+                <p>Price: $110</p>
+                <label for="quantity2">Quantity: </label>
+                <input type="number" id="quantity2" name="quantity2" value="1" min="1" max="10">
+                <button onclick="addToCart('Nike Dunk High Retro', 110, 'Dunk.png', document.getElementById('quantity2').value)">Add to Cart</button>
+            </div>
+
+            <div class="product">
+                <br><br>
+                <br><br>
+                <img src="Max DN.png" alt="Product 3" width="170px" height="170px">
+                <h2>Nike Air Max DN</h2>
+                <p>Price: $140</p>
+                <label for="quantity3">Quantity: </label>
+                <input type="number" id="quantity3" name="quantity3" value="1" min="1" max="10">
+                <button onclick="addToCart('Nike Air Max DN', 140, 'Max DN.png', document.getElementById('quantity3').value)">Add to Cart</button>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // Cart functions
+        function updateCartCount() {
+            const cart = JSON.parse(localStorage.getItem('cart')) || [];
+            document.getElementById('cart-count').textContent = cart.length;
+        }
+
+        function addToCart(name, price, image, quantity) {
+            const cart = JSON.parse(localStorage.getItem('cart')) || [];
+            const item = { name, price, image, quantity: parseInt(quantity) };
+
+            // Check if the item already exists in the cart
+            const existingItemIndex = cart.findIndex(product => product.name === name);
+            if (existingItemIndex !== -1) {
+                cart[existingItemIndex].quantity += item.quantity; // Increase quantity
+            } else {
+                cart.push(item); // Add new item to cart
+            }
+
+            localStorage.setItem('cart', JSON.stringify(cart)); // Save to localStorage
+            updateCartCount();
+        }
+
+        // Update the cart count on page load
+        window.onload = function() {
+            updateCartCount();
+        };
+    </script>
+</body>
+</html>

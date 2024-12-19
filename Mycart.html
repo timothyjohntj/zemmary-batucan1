@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Cart</title>
+    <link rel="stylesheet" href="design.css">
+</head>
+<body>
+    <header>
+        <div class="cart">
+            <button onclick="window.location.href='index.html'">BACK TO SHOP</button>
+        </div>
+    </header>
+
+    <h1>Your Shopping Cart</h1>
+
+    <div id="cartItems"></div>
+
+    <h3>Total: $<span id="totalAmount">0</span></h3>
+
+    <script>
+        function displayCart() {
+            // Get the cart from localStorage
+            let cart = JSON.parse(localStorage.getItem('cart')) || [];
+
+            let cartItemsDiv = document.getElementById('cartItems');
+            let totalAmount = 0;
+            cartItemsDiv.innerHTML = ''; // Clear previous cart data
+
+            // Loop through the cart and display each product
+            cart.forEach(item => {
+                let itemTotal = item.price * item.quantity;
+                totalAmount += itemTotal;
+
+                cartItemsDiv.innerHTML += `
+                    <div class="cart-item">
+                        <h4>${item.name}</h4>
+                        <p>Price: $${item.price} x ${item.quantity}</p>
+                        <p>Total: $${itemTotal}</p>
+                    </div>
+                `;
+            });
+
+            // Update the total price
+            document.getElementById('totalAmount').textContent = totalAmount;
+        }
+
+        // Call displayCart function when the page loads
+        window.onload = displayCart;
+    </script>
+</body>
+</html>
